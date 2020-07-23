@@ -14,13 +14,23 @@ public class OutputToFile {
 
     private String fileName = "_part.csv";
     private String path = "output/";
-    private AtomicInteger atomicInteger = new AtomicInteger();
+    private final AtomicInteger atomicInteger = new AtomicInteger();
 
-    public OutputToFile() {}
+    public OutputToFile() {
+        this.createOutputDir(this.path);
+    }
 
     public OutputToFile(String fileName, String path) {
         this.fileName = fileName;
         this.path = path;
+        createOutputDir(path);
+    }
+
+    private void createOutputDir(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdir();
+        }
     }
 
     public String getFileName() {
@@ -35,8 +45,12 @@ public class OutputToFile {
         return atomicInteger;
     }
 
+    /**
+     * Save list of elements in output directory with unique number
+     * @param outputModels List of models to write to file
+     */
     public void saveToFile(List<OutputModel> outputModels) {
-        final File csvOutputFile = new File(this.path + this.getAtomicInteger().getAndIncrement() + this.fileName);
+        final File csvOutputFile = new File(this.getPath() + this.getAtomicInteger().getAndIncrement() + this.getFileName());
         try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
             outputModels.forEach(pw::println);
         } catch (FileNotFoundException e) {
