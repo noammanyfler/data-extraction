@@ -146,3 +146,7 @@ gradle-app.setting
 /.idea/
 
 /.gradle/
+
+.DS_Store
+
+output/
